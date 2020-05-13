@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout17"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="25dp"
+    android:paddingEnd="25dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="90dp"
+    android:background="@drawable/dialog_fragment_corner">
+
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:layout_toStartOf="@+id/saveTV"
+        android:layout_toEndOf="@+id/cancelTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/element_clock" />
+
+    <TextView
+        android:id="@+id/cancelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="start"
+
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/cancel"
+        android:textColor="#4200FF"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/saveTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:text="@string/save"
+        android:textColor="#4200FF"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fra"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_below="@+id/cancelTV"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/button_from">
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="49dp"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/_08_00_am"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/from"
+            android:textAllCaps="false"
+            android:textColor="#69FFFFFF"
+            android:textSize="13sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fra2"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_below="@+id/saveTV"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/button_to">
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="49dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/_13_00_pm"
+            android:textSize="13sp"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/to"
+            android:textAllCaps="false"
+            android:textColor="#69FFFFFF"
+            android:textSize="13sp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/fra"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Switch
+            android:id="@+id/switchMonday"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/monday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+        <Switch
+            android:id="@+id/switchTuesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/tuesday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+        <Switch
+            android:id="@+id/switchWednesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/wednesday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+        <Switch
+            android:id="@+id/switchThursday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/thursday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+        <Switch
+            android:id="@+id/switchFriday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/friday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+
+        <Switch
+            android:id="@+id/switchSaturday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/saturday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+
+        <Switch
+            android:id="@+id/switchSunday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/sunday"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/line" />
+    </LinearLayout>
+
+
+</RelativeLayout>

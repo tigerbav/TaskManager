@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="25dp"
+    android:paddingTop="21dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="42dp"
+    android:background="@drawable/dialog_fragment_corner">
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/element_clock" />
+
+    <ImageView
+        android:id="@+id/imageView25"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView13"
+        android:layout_marginTop="90dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/line" />
+
+    <ImageView
+        android:id="@+id/imageView26"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView13"
+        android:layout_marginTop="120dp"
+        app:srcCompat="@drawable/line"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/cancelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="start"
+
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/cancel"
+        android:textColor="#4200FF"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/saveTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:text="@string/save"
+        android:textColor="#4200FF"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linScr"
+        android:layout_width="wrap_content"
+        android:layout_height="142dp"
+        android:layout_below="@+id/imageView13"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="0dp"
+        android:foreground="@drawable/linear_gradient"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:id="@+id/scrol1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_weight="1"
+            android:layout_marginEnd="30dp">
+
+            <LinearLayout
+                android:id="@+id/hoursLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/scrol2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_weight="1"
+
+            android:layout_marginStart="30dp">
+
+            <LinearLayout
+                android:id="@+id/minutesLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linScr"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="14dp"
+        android:background="#00FFFFFF"
+        app:srcCompat="@drawable/element_search_file" />
+
+    <ImageView
+        android:id="@+id/imageView22"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButton6"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/line" />
+
+    <Switch
+        android:id="@+id/holdOverBool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView24"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/hold_over"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/soundText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView22"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/imageButton7"
+
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/happy"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView22"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/sound"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/imageButton7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView22"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="7dp"
+        android:background="#00FFFFFF"
+        app:srcCompat="@drawable/element_search_file" />
+
+    <TextView
+        android:id="@+id/repeatText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linScr"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/imageButton6"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/never"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/imageView24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/soundText"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/line" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linScr"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/repeat"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/imageView23"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/holdOverBool"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/line" />
+
+</RelativeLayout>
