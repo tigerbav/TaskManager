@@ -29,4 +29,5 @@ public class Constants {
 
     public static final String FROM = "From";
     public static final String TO = "To";
+    public static final String SELECT_REPEAT = "Select repeat: ";
 }

@@ -1,7 +1,5 @@
 package ua.bozhko.taskmanager.WorkingSpace.ToDoList;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,7 +21,7 @@ import ua.bozhko.taskmanager.R;
 
 public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
     private Switch[] switchDayOfWeek;
-    private TextView cancelTV, saveTV;
+    private TextView cancelTV, saveTV, setTimeBefore, setTimeAfter;
     private FrameLayout[] frame = new FrameLayout[2];
     private DialogSetTime dialogSetTime;
 
@@ -40,6 +38,9 @@ public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_set_day, container, false);
 
+        setTimeBefore = view.findViewById(R.id.setTimeBefore_id);
+        setTimeAfter = view.findViewById(R.id.setTimeAfter_id);
+
         switchDayOfWeek = new Switch[]{view.findViewById(R.id.switchMonday),
                 view.findViewById(R.id.switchTuesday),
                 view.findViewById(R.id.switchWednesday),
@@ -49,6 +50,7 @@ public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
                 view.findViewById(R.id.switchSunday)};
         cancelTV = view.findViewById(R.id.cancelTV);
         saveTV = view.findViewById(R.id.saveTV);
+
         frame[0] = view.findViewById(R.id.fra);
         frame[1] = view.findViewById(R.id.fra2);
 
@@ -56,23 +58,24 @@ public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
 
         boolean[] flagDayOfWeek = new boolean[switchDayOfWeek.length];
 
-        for( int i = 0 ; i < switchDayOfWeek.length; i++){
+        for(int i = 0 ; i < switchDayOfWeek.length; i++){
             final int index = i;
             switchDayOfWeek[index].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     flagDayOfWeek[index] = b;
+                    if(b)
+                        switchDayOfWeek[index].setTextColor(getResources().getColor(R.color.switchColor));
+                    else
+                        switchDayOfWeek[index].setTextColor(getResources().getColor(R.color.black));
                 }
             });
         }
-
-
 
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         }
-
 
         frame[0].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,14 +119,25 @@ public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
 
     @Override
     public void setTimeDialogFragment(int hours, int minutes, String repeat, String sound, boolean holdOver, String typeTime) {
+        int tempHoursInt = hours >= 12 ? hours - 12 : hours;
+        String tempHours = tempHoursInt > 9 ? String.valueOf(tempHoursInt) : "0" + tempHoursInt;
+        String tempMinutes = minutes > 9 ? String.valueOf(minutes) : "0" + minutes;
+        String time;
+        if(hours >= 12)
+            time = tempHours + ":" + tempMinutes + " PM";
+        else
+            time = tempHours + ":" + tempMinutes + " AM";
+
         switch (typeTime){
             case Constants.FROM:
                 hoursFrom = hours;
                 minutesFrom = minutes;
+                setTimeBefore.setText(time);
                 break;
             case Constants.TO:
                 hoursTo = hours;
                 minutesTo = minutes;
+                setTimeAfter.setText(time);
                 break;
         }
         this.repeat = repeat;

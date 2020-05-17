@@ -69,7 +69,7 @@
                     android:background="#00D6DFE9"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/add_new_list"
-                    android:textColor="#4200FF"
+                    android:textColor="#884200FF"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

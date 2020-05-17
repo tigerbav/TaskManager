@@ -1,5 +1,6 @@
 package ua.bozhko.taskmanager.WorkingSpace.ToDoList;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ public class DialogSetTime extends DialogFragment implements View.OnTouchListene
     private TextView saveTV, cancelTV;
     private Switch switchHold;
     private TextView repeat, sound;
+    private ImageButton repeatImage;
 
     private ArrayList<TextView> hours = new ArrayList<>();
     private ArrayList<TextView> minutes = new ArrayList<>();
@@ -54,18 +59,28 @@ public class DialogSetTime extends DialogFragment implements View.OnTouchListene
 
         saveTV = view.findViewById(R.id.saveTV);
         cancelTV = view.findViewById(R.id.cancelTV);
-
+        repeatImage = view.findViewById(R.id.repeatImage);
         switchHold = view.findViewById(R.id.holdOverBool);
+        repeat = view.findViewById(R.id.repeatText);
+        sound = view.findViewById(R.id.soundText);
 
         switchHold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 switchHoldOn = b;
+                if(b)
+                    switchHold.setTextColor(getResources().getColor(R.color.switchColor));
+                else
+                    switchHold.setTextColor(getResources().getColor(R.color.black));
             }
         });
 
-        repeat = view.findViewById(R.id.repeatText);
-        sound = view.findViewById(R.id.soundText);
+        repeatImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createAlertDialogList();
+            }
+        });
 
         saveTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,5 +180,31 @@ public class DialogSetTime extends DialogFragment implements View.OnTouchListene
     static void setCallBack(ICallBack.ITime time, String type){
         iTime = time;
         typeTime = type;
+    }
+    private void createAlertDialogList(){
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+        builderSingle.setIcon(R.drawable.ic_logotipe);
+        builderSingle.setTitle(Constants.SELECT_REPEAT);
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add(Constants.REPEAT_NEVER);
+        for (int i = 5; i <=60; i = i + 5){
+            arrayAdapter.add(i + " min");
+        }
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String strName = arrayAdapter.getItem(which);
+            }
+        });
+        builderSingle.show();
     }
 }

@@ -12,12 +12,18 @@
         android:largeHeap = "true"
         android:hardwareAccelerated = "false">
 
-        <activity android:name=".WorkingSpace.MainActivity"></activity>
-        <activity android:name=".FifthSeventhScreen.Login"></activity>
-        <activity android:name=".FifthSeventhScreen.SignUp"></activity>
-        <activity android:name=".FifthSeventhScreen.SignIn"></activity>
-        <activity android:name=".SecondFourthScreen.GeneralScreenSFS"></activity>
-        <activity android:name=".FirstScreen.Logo">
+        <activity android:name=".WorkingSpace.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FifthSeventhScreen.Login"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FifthSeventhScreen.SignUp"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FifthSeventhScreen.SignIn"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SecondFourthScreen.GeneralScreenSFS"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FirstScreen.Logo"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".Receiver"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

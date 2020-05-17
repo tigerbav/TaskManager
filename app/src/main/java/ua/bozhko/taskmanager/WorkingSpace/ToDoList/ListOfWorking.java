@@ -1,6 +1,11 @@
 package ua.bozhko.taskmanager.WorkingSpace.ToDoList;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,13 +24,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
+import ua.bozhko.taskmanager.Receiver;
+import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 
 public class ListOfWorking extends Fragment implements ICallBack.IDay {
     @BindView(R.id.generalTask) LinearLayout generalTask;
@@ -175,9 +185,42 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
 
         fromToClock.setText(tempHoursBefore + ":" + tempMinutesBefore + "-" + tempHoursAfter + ":" + tempMinutesAfter);
 
+
+        setUpAlarm(getContext(), getActivity().getIntent(),
+                hoursAfter, minutesAfter);
         dataBaseFirebase.setAllDataToDB(generalList, mainList,
                 hoursBefore, minutesBefore,
                 hoursAfter, minutesAfter,
                 repeat, sound, holdOn, daysOfWeek);
+    }
+
+    private void setUpAlarm(final Context context, final Intent intent,
+                                  int hoursClock, int minutesClock) {
+        long timeInterval = 0;
+        String hours = new SimpleDateFormat("HH", Locale.UK).format(new Date());
+        String minutes = new SimpleDateFormat("mm", Locale.UK).format(new Date());
+        String seconds = new SimpleDateFormat("ss", Locale.UK).format(new Date());
+
+        int h = Integer.parseInt(hours);
+        int m = Integer.parseInt(minutes);
+        int s = Integer.parseInt(seconds);
+
+        int currentTimeInMillSec = h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000;
+        int timeForClock = hoursClock * 60 * 60 * 1000 + minutesClock * 60 * 1000;
+
+        if(currentTimeInMillSec < timeForClock) {
+            timeInterval = currentTimeInMillSec - timeForClock;
+        }
+
+        final AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        final PendingIntent pi = PendingIntent.getBroadcast(context, (int) timeInterval, intent, 0);
+        am.cancel(pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo(System.currentTimeMillis() + timeInterval, pi);
+            am.setAlarmClock(alarmClockInfo, pi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInterval, pi);
+        else
+            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInterval, pi);
     }
 }

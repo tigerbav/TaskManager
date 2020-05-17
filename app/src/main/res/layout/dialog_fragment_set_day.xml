@@ -64,7 +64,7 @@
         android:background="@drawable/button_from">
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/setTimeBefore_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
@@ -99,7 +99,7 @@
         android:background="@drawable/button_to">
 
         <TextView
-            android:id="@+id/textView20"
+            android:id="@+id/setTimeAfter_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
@@ -136,7 +136,7 @@
 
         <Switch
             android:id="@+id/switchMonday"
-
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -154,6 +154,7 @@
 
         <Switch
             android:id="@+id/switchTuesday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -171,6 +172,7 @@
 
         <Switch
             android:id="@+id/switchWednesday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -188,6 +190,7 @@
 
         <Switch
             android:id="@+id/switchThursday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -205,6 +208,7 @@
 
         <Switch
             android:id="@+id/switchFriday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -223,6 +227,7 @@
 
         <Switch
             android:id="@+id/switchSaturday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -240,6 +245,7 @@
 
         <Switch
             android:id="@+id/switchSunday"
+            android:theme="@style/switch_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
