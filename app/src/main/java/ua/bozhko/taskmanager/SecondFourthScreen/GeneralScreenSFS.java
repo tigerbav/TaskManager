@@ -44,7 +44,6 @@ public class GeneralScreenSFS extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
     }

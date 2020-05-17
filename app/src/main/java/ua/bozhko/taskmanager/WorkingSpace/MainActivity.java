@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.relativeLayout, mainToDoList).commit();
-
+        
         toDoList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -12,18 +12,12 @@
         android:largeHeap = "true"
         android:hardwareAccelerated = "false">
 
-        <activity android:name=".WorkingSpace.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FifthSeventhScreen.Login"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FifthSeventhScreen.SignUp"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FifthSeventhScreen.SignIn"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SecondFourthScreen.GeneralScreenSFS"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FirstScreen.Logo"
-            android:screenOrientation="portrait">
+        <activity android:name=".WorkingSpace.MainActivity" />
+        <activity android:name=".FifthSeventhScreen.Login" />
+        <activity android:name=".FifthSeventhScreen.SignUp" />
+        <activity android:name=".FifthSeventhScreen.SignIn" />
+        <activity android:name=".SecondFourthScreen.GeneralScreenSFS" />
+        <activity android:name=".FirstScreen.Logo">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

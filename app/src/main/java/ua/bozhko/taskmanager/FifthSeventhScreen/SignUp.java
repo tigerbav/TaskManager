@@ -51,13 +51,12 @@ public class SignUp extends AppCompatActivity {
 
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.nameString, "[a-zA-Z\\s]+", R.string.name_error);
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.lastNameString, "[a-zA-Z\\s]+", R.string.last_name_error);
-        //mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.gmailPhoneString, RegexTemplate.TELEPHONE + android.util.Patterns.EMAIL_ADDRESS, R.string.error_gmail_phone);
+        mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.gmailPhoneString, android.util.Patterns.EMAIL_ADDRESS, R.string.error_gmail_phone);
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.passwordString, ".{6,}", R.string.password_error);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAwesomeValidationNameEmailPassword.clear();
                 if(mAwesomeValidationNameEmailPassword.validate())
                     if(name.getEditText() != null &&
                             lastName.getEditText() != null &&
@@ -70,7 +69,6 @@ public class SignUp extends AppCompatActivity {
                                     password.getEditText().getText().toString(),
                                     SignUp.this);
                         }
-
             }
         });
     }
