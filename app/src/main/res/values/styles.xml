@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorWhite</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="buttons_todolist_general_list">
         <item name="android:height">45dp</item>

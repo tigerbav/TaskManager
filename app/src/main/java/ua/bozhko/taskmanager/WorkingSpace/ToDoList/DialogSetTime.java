@@ -3,6 +3,7 @@ package ua.bozhko.taskmanager.WorkingSpace.ToDoList;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -149,46 +151,65 @@ public class DialogSetTime extends DialogFragment implements View.OnTouchListene
         return view;
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        if(view.getId() == scrollViewHours.getId()){
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP)
-                hoursSet = setScrollChange(scrollViewHours);
-        }
-        else if(view.getId() == scrollViewMinutes.getId())
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP)
-                minutesSet = setScrollChange(scrollViewMinutes);
-
-        return false;
-    }
 
     private int setScrollChange(ScrollView scrollView){
-        int positionY = scrollView.getScrollY(), scrollTo;
-        String upOrDown = (positionY % scaleTextView) >= (scaleTextView / 2) ? Constants.UP : Constants.DOWN;
+        int scrollY = scrollView.getScrollY(), scrollTo;
+        String upOrDown = (scrollY % scaleTextView) >= (scaleTextView / 2) ? Constants.UP : Constants.DOWN;
         if(upOrDown.equals(Constants.DOWN))
-            scrollTo = positionY - (positionY % scaleTextView);
+            scrollTo = scrollY - (scrollY % scaleTextView);
         else
-            scrollTo = positionY - (positionY % scaleTextView) + scaleTextView;
+            scrollTo = scrollY - (scrollY % scaleTextView) + scaleTextView;
         if(scrollTo < 0)
             scrollView.scrollTo(0, 0);
         else
             scrollView.scrollTo(0, scrollTo);
-
+        scrollView.clearFocus();
         return scrollTo / scaleTextView ;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if(view.getId() == scrollViewHours.getId()){
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP)
+            {
+//                scrollViewHours.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//                    @Override
+//                    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                        hoursSet = setScrollChange(scrollViewHours);
+//                    }
+//                });
+                hoursSet = setScrollChange(scrollViewHours);
+            }
+
+        }
+        else if(view.getId() == scrollViewMinutes.getId())
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+//                    scrollViewMinutes.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//                        @Override
+//                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                            minutesSet = setScrollChange(scrollViewMinutes);
+//                        }
+//                    });
+                minutesSet = setScrollChange(scrollViewMinutes);
+            }
+
+
+        return false;
     }
 
     static void setCallBack(ICallBack.ITime time, String type){
         iTime = time;
         typeTime = type;
     }
+
     private void createAlertDialogList(){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-        builderSingle.setIcon(R.drawable.ic_logotipe);
+        builderSingle.setIcon(R.drawable.notification_icon);
         builderSingle.setTitle(Constants.SELECT_REPEAT);
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice);
         arrayAdapter.add(Constants.REPEAT_NEVER);
-        for (int i = 5; i <=60; i = i + 5){
+        for (int i = 5; i <= 60; i = i + 5){
             arrayAdapter.add(i + " min");
         }
 
@@ -203,8 +224,10 @@ public class DialogSetTime extends DialogFragment implements View.OnTouchListene
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String strName = arrayAdapter.getItem(which);
+                repeat.setText(strName);
             }
         });
         builderSingle.show();
     }
+
 }

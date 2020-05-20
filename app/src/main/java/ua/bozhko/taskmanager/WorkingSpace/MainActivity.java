@@ -3,15 +3,19 @@ package ua.bozhko.taskmanager.WorkingSpace;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageButton;
 
+import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.WorkingSpace.Goals.MainGoals;
 import ua.bozhko.taskmanager.WorkingSpace.Habits.MainHabits;
 import ua.bozhko.taskmanager.WorkingSpace.Profile.MainProfile;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.MainToDoList;
+
 
 public class MainActivity extends AppCompatActivity {
     private FragmentTransaction fragmentTransaction;
@@ -38,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.relativeLayout, mainToDoList).commit();
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+        {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.relativeLayout, mainToDoList).commit();
+        }
         
         toDoList.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,18 +14,18 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ua.bozhko.taskmanager.R;
 
 public class MainToDoList extends Fragment {
-    @BindView(R.id.vpadapter) ViewPager viewPager;
-    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todolist_after_login, container, false);
-        ButterKnife.bind(this, view);
+        viewPager = view.findViewById(R.id.vpadapter);
+        tabLayout = view.findViewById(R.id.tab_layout);
+
         viewPager.setAdapter(new VPAdapterToDoList(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
         for (int tabIndex = 0; tabIndex < tabLayout.getTabCount(); tabIndex++) {

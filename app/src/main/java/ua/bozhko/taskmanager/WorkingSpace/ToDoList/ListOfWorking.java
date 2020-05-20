@@ -32,10 +32,10 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.Receiver;
-import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 
 public class ListOfWorking extends Fragment implements ICallBack.IDay {
     @BindView(R.id.generalTask) LinearLayout generalTask;
@@ -58,6 +58,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
 
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
 
+
         if(bundle != null)
         {
             generalList = bundle.getString("BundleButton");
@@ -69,17 +70,15 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
             generalTask.addView(button);
             button.setLayoutParams(layoutParams);
         }
-
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 creatingAlertDialog();
             }
         });
-        dataBaseFirebase.readFromDBMainList(generalList, getContext(), toDoList, dialogSetDay, getFragmentManager());
+        dataBaseFirebase.readFromDBMainList(generalList, getContext(), toDoList, dialogSetDay, getFragmentManager(), this);
         return view;
     }
-
 
     private void creatingAlertDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext(), R.style.my_custom_alert_dialog);
@@ -185,8 +184,11 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
 
         fromToClock.setText(tempHoursBefore + ":" + tempMinutesBefore + "-" + tempHoursAfter + ":" + tempMinutesAfter);
 
+        Intent intent = new Intent(getContext(), Receiver.class);
+        intent.putExtra(Constants.MAIN_LIST, mainList);
+        intent.putExtra(Constants.GLOBAL_LIST, generalList);
 
-        setUpAlarm(getContext(), getActivity().getIntent(),
+        setUpAlarm(getContext(), intent,
                 hoursAfter, minutesAfter);
         dataBaseFirebase.setAllDataToDB(generalList, mainList,
                 hoursBefore, minutesBefore,
@@ -196,7 +198,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
 
     private void setUpAlarm(final Context context, final Intent intent,
                                   int hoursClock, int minutesClock) {
-        long timeInterval = 0;
+        long timeInterval = 1000;
         String hours = new SimpleDateFormat("HH", Locale.UK).format(new Date());
         String minutes = new SimpleDateFormat("mm", Locale.UK).format(new Date());
         String seconds = new SimpleDateFormat("ss", Locale.UK).format(new Date());
@@ -209,7 +211,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
         int timeForClock = hoursClock * 60 * 60 * 1000 + minutesClock * 60 * 1000;
 
         if(currentTimeInMillSec < timeForClock) {
-            timeInterval = currentTimeInMillSec - timeForClock;
+            timeInterval = timeForClock - currentTimeInMillSec;
         }
 
         final AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

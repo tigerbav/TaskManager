@@ -146,7 +146,7 @@ public class DialogSetDay extends DialogFragment implements ICallBack.ITime{
         this.holdOver = holdOver;
     }
 
-    static void setCallBack(ICallBack.IDay day, String generaList, String value, TextView fromToClock){
+    public static void setCallBack(ICallBack.IDay day, String generaList, String value, TextView fromToClock){
         iDay = day;
         DialogSetDay.generalList = generaList;
         mainList = value;

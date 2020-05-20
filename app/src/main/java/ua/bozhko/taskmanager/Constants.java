@@ -4,7 +4,9 @@ public class Constants {
     public static final String FIRST_LOAD = "First load",
             REPEAT_LOGIN = "Task Manager has an account with this mail. Please, enter another!",
             ERROR_PASSWORD_MAIL = "Password or mail error!",
-            GENERAL_TASK = "General task";
+            GENERAL_TASK = "General task",
+            NOTIFICATION_MAIN_TEXT = "Notification main text",
+            GLOBAL_LIST ="Global list";
     public static final String MAIN_LIST = "Main list";
     public static final String FLAG = "Flag";
     public static final String DOWN = "Down";

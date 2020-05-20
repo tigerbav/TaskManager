@@ -2,6 +2,8 @@ package ua.bozhko.taskmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -22,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,7 +31,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,6 +40,7 @@ import java.util.Objects;
 import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.DialogSetDay;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.GeneralList;
+import ua.bozhko.taskmanager.WorkingSpace.ToDoList.ICallBack;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.ListOfWorking;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.NoTaskScreen;
 
@@ -133,6 +134,14 @@ public class DataBaseFirebase {
                                 if(task.getResult().getData() != null){
                                     Map<String, Object> temp = task.getResult().getData();
                                     if ((boolean) temp.get(Constants.FLAG))
+//                                    {
+//                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//                                        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+//                                        {
+//                                            fTrans = getFragmentManager().beginTransaction();
+//                                            fTrans.add(R.id.relativeLayout, new GeneralList()).commit();
+//                                        }
+//                                    }
                                         fTrans.add(R.id.frameLayout, generalList);
                                     else
                                         fTrans.add(R.id.frameLayout, noTaskScreen);
@@ -141,7 +150,7 @@ public class DataBaseFirebase {
                                 else
                                 {
                                     fTrans.add(R.id.frameLayout, noTaskScreen);
-                                    fTrans/*.addToBackStack(null)*/.commit();
+                                    fTrans.commit();
                                 }
                             }
                         }
@@ -197,7 +206,7 @@ public class DataBaseFirebase {
 
     }
 
-    public void readFromDBMainList(String generalTask, Context context, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager){
+    public void readFromDBMainList(String generalTask, Context context, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, ICallBack.IDay iDay){
         db.collection(Objects.requireNonNull(mUser.getEmail()))
                 .document(currentData)
                 .collection(generalTask)
@@ -225,18 +234,17 @@ public class DataBaseFirebase {
                                             "0" + temp.get(Constants.TIME_AFTER_MINUTES);
 
                                     time = tempHoursBefore + ":" +
-                                            tempHoursAfter + "-" +
-                                            tempMinutesBefore + ":" +
+                                            tempMinutesBefore + "-" +
+                                            tempHoursAfter + ":" +
                                             tempMinutesAfter;
                                 }
                                 catch (Exception e){
                                     Log.w("Null TIME", e);
                                 }
 
-
                                 ListOfWorking.listOfToDoList.add(listMain);
 
-                                setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time);
+                                setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time, generalTask, iDay);
                             }
                         } else {
                             Log.d("Error read", "Error getting documents: ", task.getException());
@@ -245,7 +253,7 @@ public class DataBaseFirebase {
                 });
     }
 
-    private void setList(Context context, String listMain, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, String time){
+    private void setList(Context context, String listMain, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, String time, String generalTask, ICallBack.IDay iDay){
         LinearLayout.LayoutParams layoutColumn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutColumn.setMargins(0, 30, 15, 0);
 
@@ -278,6 +286,7 @@ public class DataBaseFirebase {
         clock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DialogSetDay.setCallBack(iDay, generalTask, listMain, fromToClock);
                 dialogSetDay.show(fragmentManager, "DialogSetDay");
             }
         });
