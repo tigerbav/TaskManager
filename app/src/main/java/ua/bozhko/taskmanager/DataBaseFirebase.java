@@ -72,6 +72,7 @@ public class DataBaseFirebase {
         mAuth.createUserWithEmailAndPassword(gmailPhone, password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
+                        //взятие данных зарегестрированного пользователя из Firebase в текущее приложение
                         mUser = mAuth.getCurrentUser();
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

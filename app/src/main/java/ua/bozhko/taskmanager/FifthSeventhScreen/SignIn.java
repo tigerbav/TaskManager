@@ -28,9 +28,6 @@ public class SignIn extends AppCompatActivity {
     static private DataBaseFirebase dataBaseFirebase;
     private SignIn signIn;
 
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

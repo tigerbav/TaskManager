@@ -17,6 +17,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         sign_in_btn = findViewById(R.id.signInBtn);
         sign_up_btn = findViewById(R.id.signUpBtn);
 

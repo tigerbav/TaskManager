@@ -27,6 +27,7 @@ public class GeneralScreenSFS extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_sfs);
+
         viewPager = findViewById(R.id.pager);
         tabLayout = findViewById(R.id.tab_layout);
         startBtn = findViewById(R.id.getStartedBtn);
@@ -37,6 +38,7 @@ public class GeneralScreenSFS extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                //вход произошел первый раз
                 editor.putBoolean(Constants.FIRST_LOAD, true);
                 editor.apply();
                 Intent intent = new Intent(GeneralScreenSFS.this, Login.class);
@@ -44,6 +46,7 @@ public class GeneralScreenSFS extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        //опеределение вьюПейджера, который содержит в себе 3 фрагмента
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
     }

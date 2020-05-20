@@ -17,11 +17,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         };
     }
 
+
+    //определение позиции фрагмента
     @Override
     public Fragment getItem(int position) {
         return childFragments[position];
     }
 
+    //возвращает размер childFragments
     @Override
     public int getCount() {
         return childFragments.length;

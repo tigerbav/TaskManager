@@ -20,11 +20,15 @@ public class Logo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // отображение представления, в данном случае активити
         setContentView(R.layout.activity_logo);
 
+        //определение переменной для хранения локальных данных
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        //создание класса "поток", который работает параллельно с основным(поток, проходящий по всей программе)
         new Thread(()->{
+            //try(ловим ошибки)/catch(если словили, то обрабатываем) необходим для Thread.sleep, ибо данное обращение этого требует
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -32,16 +36,18 @@ public class Logo extends AppCompatActivity {
             }
             if(FirebaseAuth.getInstance().getCurrentUser() != null){
                 Intent intent = new Intent(Logo.this, MainActivity.class);
+                //подготовка к удалению ЛОГО и созданию МэйнАктивити
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
             else{
                 Intent intent;
+                //смотри мне!
                 if(sharedPreferences.getBoolean(Constants.FIRST_LOAD, false))
                     intent = new Intent(Logo.this, Login.class);
                 else
                     intent = new Intent(Logo.this, GeneralScreenSFS.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//удаляем с памяти активити,
                 startActivity(intent);
             }
 

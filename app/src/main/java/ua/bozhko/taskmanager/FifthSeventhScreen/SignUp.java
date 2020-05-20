@@ -28,6 +28,7 @@ public class SignUp extends AppCompatActivity {
 
     final AwesomeValidation mAwesomeValidationNameEmailPassword = new AwesomeValidation(TEXT_INPUT_LAYOUT);
 
+    //класс для работы с базой данных
     static private DataBaseFirebase dataBaseFirebase;
 
     @Override
@@ -49,6 +50,7 @@ public class SignUp extends AppCompatActivity {
 
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
 
+        //определяет строки на ошибку
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.nameString, "[a-zA-Z\\s]+", R.string.name_error);
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.lastNameString, "[a-zA-Z\\s]+", R.string.last_name_error);
         mAwesomeValidationNameEmailPassword.addValidation(SignUp.this, R.id.gmailPhoneString, android.util.Patterns.EMAIL_ADDRESS, R.string.error_gmail_phone);
@@ -57,6 +59,7 @@ public class SignUp extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //проверка ошибок
                 if(mAwesomeValidationNameEmailPassword.validate())
                     if(name.getEditText() != null &&
                             lastName.getEditText() != null &&
