@@ -90,7 +90,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         });
 
         alert.setNegativeButton("Cancel", (dialog, whichButton) -> {
-            // Canceled.
+            dialog.dismiss();
         });
 
         alert.show();
@@ -101,7 +101,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         for(Button clicked : allButtons){
             if(clicked.getId() == view.getId()){
                 ListOfWorking listOfWorking = new ListOfWorking();
-
+            //стягивание текста на след єкран
                 Bundle bundle = new Bundle();
                 bundle.putString("BundleButton", clicked.getText().toString());
                 listOfWorking.setArguments(bundle);

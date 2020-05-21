@@ -18,6 +18,7 @@ import ua.bozhko.taskmanager.WorkingSpace.ToDoList.MainToDoList;
 
 
 public class MainActivity extends AppCompatActivity {
+    //необходим для изменения фрагментов в пределах контейнера relativeLayout
     private FragmentTransaction fragmentTransaction;
     private ImageButton toDoList, profile, habits, goals;
     private MainToDoList mainToDoList;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         habits = findViewById(R.id.habits);
         goals = findViewById(R.id.goals);
 
+        //определение фрагментов
         mainToDoList = new MainToDoList();
         mainProfile = new MainProfile();
         mainHabits = new MainHabits();
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.relativeLayout, mainToDoList).commit();
-
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))

@@ -44,6 +44,8 @@ import ua.bozhko.taskmanager.WorkingSpace.ToDoList.ICallBack;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.ListOfWorking;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.NoTaskScreen;
 
+
+//Singleton class
 public class DataBaseFirebase {
 
     static DataBaseFirebase dataBaseFirebase;

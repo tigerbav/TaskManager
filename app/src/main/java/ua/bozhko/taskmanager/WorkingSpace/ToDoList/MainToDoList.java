@@ -28,6 +28,7 @@ public class MainToDoList extends Fragment {
 
         viewPager.setAdapter(new VPAdapterToDoList(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+        //убираем заглавные буквы
         for (int tabIndex = 0; tabIndex < tabLayout.getTabCount(); tabIndex++) {
             TextView tabTextView = (TextView)(((LinearLayout)((LinearLayout)tabLayout.getChildAt(0)).getChildAt(tabIndex)).getChildAt(1));
             tabTextView.setAllCaps(false);
