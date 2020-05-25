@@ -1,7 +1,9 @@
 package ua.bozhko.taskmanager.WorkingSpace.ToDoList;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
+import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 
@@ -41,6 +44,22 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(15, 15, 15, 15);
 
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+        {
+            ListOfWorking listOfWorking = new ListOfWorking();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("BundleButton", sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, ""));
+            listOfWorking.setArguments(bundle);
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear().apply();
+
+            TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
+            TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking).commit();
+        }
 
         for (int value : buttonName) {
             Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
@@ -107,9 +126,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
                 listOfWorking.setArguments(bundle);
 
                 TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
-                TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking);
-                //TodayGeneralClass.fTrans.addToBackStack(null);
-                TodayGeneralClass.fTrans.commit();
+                TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking).commit();
 
                 break;
             }

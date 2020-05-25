@@ -28,7 +28,7 @@ public class TodayGeneralClass extends Fragment {
         generalList = new GeneralList();
 
         fTrans = getFragmentManager().beginTransaction();
-        dataBaseFirebase.takeFlag(fTrans, noTaskScreen, generalList);
+        dataBaseFirebase.takeFlag(fTrans, noTaskScreen, generalList, getContext());
         return view;
     }
 }

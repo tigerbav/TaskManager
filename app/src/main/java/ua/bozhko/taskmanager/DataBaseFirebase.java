@@ -125,7 +125,7 @@ public class DataBaseFirebase {
 
     }
 
-    public void takeFlag(final FragmentTransaction fTrans, NoTaskScreen noTaskScreen, GeneralList generalList){
+    public void takeFlag(final FragmentTransaction fTrans, NoTaskScreen noTaskScreen, GeneralList generalList, Context context){
         db.collection(Objects.requireNonNull(mUser.getEmail()))
                 .document(currentData)
                 .get()
@@ -137,18 +137,17 @@ public class DataBaseFirebase {
                                 if(task.getResult().getData() != null){
                                     Map<String, Object> temp = task.getResult().getData();
                                     if ((boolean) temp.get(Constants.FLAG))
-//                                    {
-//                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                                        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
-//                                        {
-//                                            fTrans = getFragmentManager().beginTransaction();
-//                                            fTrans.add(R.id.relativeLayout, new GeneralList()).commit();
-//                                        }
-//                                    }
-                                        fTrans.add(R.id.frameLayout, generalList);
+                                    {
+                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                                        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+                                            fTrans.add(R.id.frameLayout, new GeneralList());
+                                        else
+                                            fTrans.add(R.id.frameLayout, generalList);
+                                    }
+
                                     else
                                         fTrans.add(R.id.frameLayout, noTaskScreen);
-                                    fTrans/*.addToBackStack(null)*/.commit();
+                                    fTrans.commit();
                                 }
                                 else
                                 {

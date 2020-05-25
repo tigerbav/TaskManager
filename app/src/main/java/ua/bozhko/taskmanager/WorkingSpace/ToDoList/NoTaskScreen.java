@@ -30,7 +30,6 @@ public class NoTaskScreen extends Fragment {
             public void onClick(View view) {
                 TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
                 TodayGeneralClass.fTrans.replace(R.id.frameLayout, generalList).commit();
-                //TodayGeneralClass.fTrans.addToBackStack(null);
             }
         });
         return view;

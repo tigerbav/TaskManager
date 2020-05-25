@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,11 +39,13 @@ import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.Receiver;
+import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 
 public class ListOfWorking extends Fragment implements ICallBack.IDay {
-    @BindView(R.id.generalTask) LinearLayout generalTask;
-    @BindView(R.id.todolist) LinearLayout toDoList;
-    @BindView(R.id.add_new_list_2) TextView textView;
+    private LinearLayout generalTask;
+    private LinearLayout toDoList;
+    private TextView textView;
+    private ImageButton btnBack;
 
     private DialogSetDay dialogSetDay;
     private DataBaseFirebase dataBaseFirebase;
@@ -52,11 +57,17 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todolist_list_working, container, false);
-        ButterKnife.bind(this, view);
+        generalTask = view.findViewById(R.id.generalTask);
+        toDoList = view.findViewById(R.id.todolist);
+        textView = view.findViewById(R.id.add_new_list_2);
+        btnBack = view.findViewById(R.id.backBtn);
+
         Bundle bundle = this.getArguments();
         dialogSetDay = new DialogSetDay();
 
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
+
+
 
 
         if(bundle != null)
@@ -65,7 +76,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(15, 15, 15, 20);
 
-            Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
+            Button button = new Button(getContext(),  null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
             button.setText(generalList);
             generalTask.addView(button);
             button.setLayoutParams(layoutParams);
@@ -74,6 +85,14 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
             @Override
             public void onClick(View view) {
                 creatingAlertDialog();
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
+                TodayGeneralClass.fTrans.replace(R.id.frameLayout, new GeneralList()).commit();
             }
         });
         dataBaseFirebase.readFromDBMainList(generalList, getContext(), toDoList, dialogSetDay, getFragmentManager(), this);
