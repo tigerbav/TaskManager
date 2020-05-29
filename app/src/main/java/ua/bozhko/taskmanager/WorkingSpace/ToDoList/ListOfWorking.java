@@ -70,7 +70,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
-            NotificationDialog.setNotification(this, "00", "00", sharedPreferences.getString(Constants.MAIN_LIST, ""),
+            NotificationDialog.setNotification(this, sharedPreferences.getString(Constants.MAIN_LIST, ""),
                     sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, ""));
             notificationDialog = new NotificationDialog();
             notificationDialog.setCancelable(false);
@@ -227,7 +227,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
         intent.putExtra(Constants.TO, tempHoursAfter + ":" + tempMinutesAfter);
 
         setUpAlarm(getContext(), intent,
-                hoursBefore, hoursBefore);
+                hoursBefore, minutesBefore);
         dataBaseFirebase.setAllDataToDB(generalList, mainList,
                 hoursBefore, minutesBefore,
                 hoursAfter, minutesAfter,

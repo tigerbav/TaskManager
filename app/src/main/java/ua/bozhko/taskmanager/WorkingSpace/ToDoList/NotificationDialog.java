@@ -32,7 +32,7 @@ public class NotificationDialog extends DialogFragment {
     private TextView timeEnd;
 
     private static ICallBack.INotification iNotification;
-    private static String timeStartStr, timeEndStr, task, general;
+    private static String task, general;
 
     private DataBaseFirebase dataBaseFirebase;
     private SharedPreferences sharedPreferences;
@@ -47,9 +47,6 @@ public class NotificationDialog extends DialogFragment {
 
         timeStart = view.findViewById(R.id.timeStart);
         timeEnd = view.findViewById(R.id.timeEnd);
-
-        timeStart.setText(timeStartStr);
-        timeEnd.setText(timeEndStr);
 
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
 
@@ -94,10 +91,8 @@ public class NotificationDialog extends DialogFragment {
         return view;
     }
 
-    static void setNotification(ICallBack.INotification notification, String timeStart, String timeEnd, String taskMain, String generalTask){
+    static void setNotification(ICallBack.INotification notification, String taskMain, String generalTask){
         iNotification = notification;
-        timeStartStr = timeStart;
-        timeEndStr = timeEnd;
         task = taskMain;
         general = generalTask;
     }

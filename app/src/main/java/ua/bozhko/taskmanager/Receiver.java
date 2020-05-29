@@ -19,8 +19,8 @@ import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 
 
 
-public class Receiver extends BroadcastReceiver {
-
+public class Receiver extends BroadcastReceiver {//широковещательный приемник) да, я такой
+//работает даже после перезагрузки в отличии от Service
     @Override
     public void onReceive(Context context, Intent intent) {
 
