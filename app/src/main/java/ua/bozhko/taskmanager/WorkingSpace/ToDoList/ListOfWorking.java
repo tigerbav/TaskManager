@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,25 +34,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.Receiver;
-import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 
-public class ListOfWorking extends Fragment implements ICallBack.IDay {
+public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack.INotification {
     private LinearLayout generalTask;
     private LinearLayout toDoList;
     private TextView textView;
     private ImageButton btnBack;
 
     private DialogSetDay dialogSetDay;
+    private NotificationDialog notificationDialog;
     private DataBaseFirebase dataBaseFirebase;
     private String generalList;
 
-    public static List<String> listOfToDoList = new ArrayList<>();
+    public static List<CheckBox> listOfToDoList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -65,10 +64,21 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
         Bundle bundle = this.getArguments();
         dialogSetDay = new DialogSetDay();
 
+
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+        {
+            NotificationDialog.setNotification(this, "00", "00", sharedPreferences.getString(Constants.MAIN_LIST, ""),
+                    sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, ""));
+            notificationDialog = new NotificationDialog();
+            notificationDialog.setCancelable(false);
+            notificationDialog.show(getFragmentManager(), "Notification Dialog");
 
-
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Constants.NOTIFICATION_MAIN_TEXT, "").apply();
+        }
 
         if(bundle != null)
         {
@@ -141,6 +151,13 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
         CheckBox checkBox = new CheckBox(getContext());
         checkBox.setText(value);
         checkBox.setId(id);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                    dataBaseFirebase.writeToDBCheckList(generalList, value);
+            }
+        });
         checkBox.setLayoutParams(forWeight);
         threeColumn.addView(checkBox);
 
@@ -181,8 +198,8 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
 
     private boolean repeatList(String value){
        if(listOfToDoList != null) {
-           for(String tempList : listOfToDoList){
-               if(value.equals(tempList))
+           for(CheckBox tempList : listOfToDoList){
+               if(value.equals(tempList.getText().toString()))
                    return true;
            }
        }
@@ -206,18 +223,20 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
         Intent intent = new Intent(getContext(), Receiver.class);
         intent.putExtra(Constants.MAIN_LIST, mainList);
         intent.putExtra(Constants.GLOBAL_LIST, generalList);
+        intent.putExtra(Constants.FROM, tempHoursBefore + ":" + tempMinutesBefore);
+        intent.putExtra(Constants.TO, tempHoursAfter + ":" + tempMinutesAfter);
 
         setUpAlarm(getContext(), intent,
-                hoursAfter, minutesAfter);
+                hoursBefore, hoursBefore);
         dataBaseFirebase.setAllDataToDB(generalList, mainList,
                 hoursBefore, minutesBefore,
                 hoursAfter, minutesAfter,
                 repeat, sound, holdOn, daysOfWeek);
     }
 
-    private void setUpAlarm(final Context context, final Intent intent,
+    public static void setUpAlarm(final Context context, final Intent intent,
                                   int hoursClock, int minutesClock) {
-        long timeInterval = 1000;
+        long timeInterval = 0;
         String hours = new SimpleDateFormat("HH", Locale.UK).format(new Date());
         String minutes = new SimpleDateFormat("mm", Locale.UK).format(new Date());
         String seconds = new SimpleDateFormat("ss", Locale.UK).format(new Date());
@@ -243,5 +262,14 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay {
             am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInterval, pi);
         else
             am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInterval, pi);
+    }
+
+    @Override
+    public void setCheckBox(String checkBoxText) {
+        for(CheckBox temp : listOfToDoList) {
+            if(temp.getText().toString().equals(checkBoxText)) {
+                temp.setChecked(true);
+            }
+        }
     }
 }

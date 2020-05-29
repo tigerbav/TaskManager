@@ -54,9 +54,6 @@ public class GeneralList extends Fragment implements View.OnClickListener {
             bundle.putString("BundleButton", sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, ""));
             listOfWorking.setArguments(bundle);
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear().apply();
-
             TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
             TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking).commit();
         }

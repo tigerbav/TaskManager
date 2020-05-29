@@ -28,6 +28,9 @@ public class Receiver extends BroadcastReceiver {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.NOTIFICATION_MAIN_TEXT, intent.getStringExtra(Constants.GLOBAL_LIST));
+        editor.putString(Constants.MAIN_LIST, intent.getStringExtra(Constants.MAIN_LIST));
+        editor.putString(Constants.FROM, intent.getStringExtra(Constants.FROM));
+        editor.putString(Constants.TO, intent.getStringExtra(Constants.TO));
         editor.apply();
 
 
