@@ -11,7 +11,12 @@ public interface ICallBack {
                                   String repeat, String sound, boolean holdOn,
                                   boolean[] daysOfWeek);
     }
+
     interface ITime {
         void setTimeDialogFragment(int hours, int minutes, String repeat, String sound, boolean holdOn, String typeTime);
+    }
+
+    interface INotification{
+        void setCheckBox(String checkBoxText);
     }
 }

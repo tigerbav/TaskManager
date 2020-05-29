@@ -48,6 +48,37 @@ public class GeneralScreenSFS extends AppCompatActivity {
         });
         //опеределение вьюПейджера, который содержит в себе 3 фрагмента
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorWhite));
         tabLayout.setupWithViewPager(viewPager);
+        for (int i = 0; i < 3; i++) {
+            if(i == 0)
+                tabLayout.getTabAt(i).setIcon(R.drawable.tab_layout_active);
+            else
+                tabLayout.getTabAt(i).setIcon(R.drawable.tab_layout_not_active);
+        }
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < 3; i++) {
+                    if(position == i)
+                        tabLayout.getTabAt(i).setIcon(R.drawable.tab_layout_active);
+                    else
+                        tabLayout.getTabAt(i).setIcon(R.drawable.tab_layout_not_active);
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

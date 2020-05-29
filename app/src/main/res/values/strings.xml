@@ -32,10 +32,10 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="from_08_00_am">from: <br />08:00 AM</string>
-    <string name="from">from</string>
+    <string name="from">from:</string>
     <string name="_08_00_am">08:00 AM</string>
     <string name="_13_00_pm">13:00 PM</string>
-    <string name="to">to</string>
+    <string name="to">to:</string>
     <string name="repeat">Repeat</string>
     <string name="sound">Sound</string>
     <string name="hold_over">Hold Over</string>
@@ -50,6 +50,8 @@
     <string name="id">ID</string>
     <string name="add_new_list">Add new list +</string>
     <string name="go_to_the_next_task"><b>Go to the next Task</b>></string>
+    <string name="task_manager">TASK MANAGER</string>
+    <string name="go_to_the_next_task_2">Go to the next Task</string>
 
 
 </resources>

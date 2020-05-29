@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-;
+
 import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.DialogSetDay;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.GeneralList;
@@ -113,8 +114,8 @@ public class DataBaseFirebase {
         if(mUser.getEmail() != null)
         {
             db.collection(mUser.getEmail())
-                    .document(currentData)
-                    .collection(currentData)
+                    .document(Constants.GENERAL_TASK)
+                    .collection(Constants.GENERAL_TASK)
                     .document(generalList)
                     .set(generalTask);
 
@@ -140,14 +141,13 @@ public class DataBaseFirebase {
                                     {
                                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                                         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
-                                            fTrans.add(R.id.frameLayout, new GeneralList());
+                                            fTrans.add(R.id.frameLayout, new GeneralList()).commit();
                                         else
-                                            fTrans.add(R.id.frameLayout, generalList);
+                                            fTrans.add(R.id.frameLayout, generalList).commit();
                                     }
 
                                     else
-                                        fTrans.add(R.id.frameLayout, noTaskScreen);
-                                    fTrans.commit();
+                                        fTrans.add(R.id.frameLayout, noTaskScreen).commit();
                                 }
                                 else
                                 {
@@ -163,8 +163,8 @@ public class DataBaseFirebase {
 
     public void readFromDBGeneralList(Context context, LinearLayout.LayoutParams layoutParams, LinearLayout linearLayout, ArrayList<Button> allButtons, GeneralList generalList){
         db.collection(Objects.requireNonNull(mUser.getEmail()))
-                .document(currentData)
-                .collection(currentData)
+                .document(Constants.GENERAL_TASK)
+                .collection(Constants.GENERAL_TASK)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -208,6 +208,21 @@ public class DataBaseFirebase {
 
     }
 
+    public void writeToDBCheckList(String generalList, String mainList){
+        Map<String, Object> listData = new HashMap<>();
+        listData.put(Constants.CHECK_BOX_COMPLETE, true);
+
+        if(mUser.getEmail() != null)
+        {
+            db.collection(mUser.getEmail())
+                    .document(currentData)
+                    .collection(generalList)
+                    .document(mainList)
+                    .update(listData);
+        }
+
+    }
+
     public void readFromDBMainList(String generalTask, Context context, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, ICallBack.IDay iDay){
         db.collection(Objects.requireNonNull(mUser.getEmail()))
                 .document(currentData)
@@ -221,6 +236,7 @@ public class DataBaseFirebase {
                                 Map<String, Object> temp = document.getData();
                                 String listMain = (String) temp.get(Constants.MAIN_LIST);
                                 String time = "";
+                                boolean checkBoxComplete = temp.get(Constants.CHECK_BOX_COMPLETE) == null ? false : (boolean) temp.get(Constants.CHECK_BOX_COMPLETE);
                                 try {
                                     String tempHoursBefore = (long) temp.get(Constants.TIME_BEFORE_HOURS) > 9 ?
                                             String.valueOf(temp.get(Constants.TIME_BEFORE_HOURS)) :
@@ -244,9 +260,7 @@ public class DataBaseFirebase {
                                     Log.w("Null TIME", e);
                                 }
 
-                                ListOfWorking.listOfToDoList.add(listMain);
-
-                                setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time, generalTask, iDay);
+                                setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time, generalTask, iDay, checkBoxComplete);
                             }
                         } else {
                             Log.d("Error read", "Error getting documents: ", task.getException());
@@ -255,7 +269,11 @@ public class DataBaseFirebase {
                 });
     }
 
-    private void setList(Context context, String listMain, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, String time, String generalTask, ICallBack.IDay iDay){
+    private void setList(Context context, String listMain,
+                         LinearLayout toDoList, DialogSetDay dialogSetDay,
+                         FragmentManager fragmentManager,
+                         String time, String generalTask,
+                         ICallBack.IDay iDay, boolean checkBoxComplete){
         LinearLayout.LayoutParams layoutColumn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutColumn.setMargins(0, 30, 15, 0);
 
@@ -269,8 +287,18 @@ public class DataBaseFirebase {
 
         CheckBox checkBox = new CheckBox(context);
         checkBox.setText(listMain);
+        checkBox.setChecked(checkBoxComplete);
         checkBox.setLayoutParams(forWeight);
         threeColumn.addView(checkBox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                    dataBaseFirebase.writeToDBCheckList(generalTask, listMain);
+            }
+        });
+        ListOfWorking.listOfToDoList.add(checkBox);
+
 
         TextView fromToClock = new TextView(context);
         fromToClock.setTextSize(16f);
@@ -331,6 +359,8 @@ public class DataBaseFirebase {
         listData.put(Constants.REPEAT, repeat);
         listData.put(Constants.SOUND, sound);
         listData.put(Constants.HOLD_OVER, holdOn);
+
+        listData.put(Constants.CHECK_BOX_COMPLETE, false);
 
         if(mUser.getEmail() != null)
         {

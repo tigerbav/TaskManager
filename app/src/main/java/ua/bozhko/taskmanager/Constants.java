@@ -6,7 +6,8 @@ public class Constants {
             ERROR_PASSWORD_MAIL = "Password or mail error!",
             GENERAL_TASK = "General task",
             NOTIFICATION_MAIN_TEXT = "Notification main text",
-            GLOBAL_LIST ="Global list";
+            GLOBAL_LIST ="Global list",
+            COUNTER = "Counter";
     public static final String MAIN_LIST = "Main list";
     public static final String FLAG = "Flag";
     public static final String DOWN = "Down";
@@ -32,4 +33,5 @@ public class Constants {
     public static final String FROM = "From";
     public static final String TO = "To";
     public static final String SELECT_REPEAT = "Select repeat: ";
+    public static final String CHECK_BOX_COMPLETE = "Check box complete";
 }
