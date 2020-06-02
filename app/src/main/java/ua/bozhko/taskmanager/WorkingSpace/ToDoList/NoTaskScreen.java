@@ -10,18 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ua.bozhko.taskmanager.R;
 
 public class NoTaskScreen extends Fragment {
-    @BindView(R.id.addList) ImageButton imageButton;
+    private ImageButton imageButton;
     private GeneralList generalList;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todolist_no_task, container, false);
-        ButterKnife.bind(this, view);
+        imageButton = view.findViewById(R.id.addList);
 
         generalList = new GeneralList();
 

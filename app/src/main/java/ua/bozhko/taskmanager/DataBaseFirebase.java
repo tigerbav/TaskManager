@@ -1,5 +1,6 @@
 package ua.bozhko.taskmanager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,10 +22,18 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -58,6 +67,7 @@ public class DataBaseFirebase {
     private String currentData;
 
 
+    private static GoogleSignInOptions gso;
 
     private DataBaseFirebase(){
         currentData = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
@@ -374,5 +384,52 @@ public class DataBaseFirebase {
                     .document(currentData)
                     .set(flag);
         }
+    }
+    public static void setGSO(){
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(String.valueOf(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+    }
+
+    public void googleSignIn(Activity activity){
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        activity.startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
+    }
+
+    public void handleSignInResult(Task<GoogleSignInAccount> completedTask, Activity activity) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            dataBaseFirebase.firebaseAuthWithGoogle(activity, account.getIdToken());
+        } catch (Exception e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("Error: ", "signInResult:failed code=" + e);
+        }
+    }
+
+    public void firebaseAuthWithGoogle(Activity activity, String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent(activity, MainActivity.class);
+
+                            //подготовка к удалению ЛОГО и созданию МэйнАктивити
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            activity.startActivity(intent);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Error:", "signInWithCredential:failure", task.getException());
+                        }
+                    }
+                });
     }
 }

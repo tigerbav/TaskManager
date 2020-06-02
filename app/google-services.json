@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "269335110117-laegua8b7av0jvlm2fm7p42oha294rvl.apps.googleusercontent.com",
+          "client_id": "269335110117-0oq6e4kocm5k9vadj1it8t1abu3i3qrb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ua.bozhko.taskmanager",
@@ -23,7 +23,7 @@
           }
         },
         {
-          "client_id": "269335110117-v36g5arfvtup284ni6vu84016h11idsv.apps.googleusercontent.com",
+          "client_id": "269335110117-4bqs6pe78qkhnukku75n1180r88uhsod.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -36,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "269335110117-v36g5arfvtup284ni6vu84016h11idsv.apps.googleusercontent.com",
+              "client_id": "269335110117-4bqs6pe78qkhnukku75n1180r88uhsod.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

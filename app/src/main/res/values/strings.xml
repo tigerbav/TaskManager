@@ -45,13 +45,16 @@
     <string name="last_name_error">Last name error!</string>
     <string name="error_gmail_phone">Input error!</string>
     <string name="password_error">Password error!</string>
-    <string name="facebook_app_id">ga0RGNYHvNM5d0SLGQfpQWAPGJ8=</string>
+
+    <string name="facebook_app_id">828389557653033</string>
     <string name="fb_login_protocol_scheme">fb828389557653033</string>
+
     <string name="id">ID</string>
     <string name="add_new_list">Add new list +</string>
     <string name="go_to_the_next_task"><b>Go to the next Task</b>></string>
     <string name="task_manager">TASK MANAGER</string>
     <string name="go_to_the_next_task_2">Go to the next Task</string>
+
 
 
 </resources>

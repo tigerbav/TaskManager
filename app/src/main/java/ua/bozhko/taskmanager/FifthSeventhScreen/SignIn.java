@@ -11,8 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
+import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
@@ -60,5 +64,24 @@ public class SignIn extends AppCompatActivity {
                         }
             }
         });
+
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataBaseFirebase.googleSignIn(SignIn.this);
+            }
+        });
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == Constants.RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            dataBaseFirebase.handleSignInResult(task, this);
+        }
     }
 }

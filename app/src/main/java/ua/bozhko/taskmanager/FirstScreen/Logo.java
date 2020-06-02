@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.FirebaseAuth;
 
 import ua.bozhko.taskmanager.Constants;
@@ -34,7 +35,8 @@ public class Logo extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            if(FirebaseAuth.getInstance().getCurrentUser() != null ||
+                    GoogleSignIn.getLastSignedInAccount(this) != null){
                 Intent intent = new Intent(Logo.this, MainActivity.class);
                 //подготовка к удалению ЛОГО и созданию МэйнАктивити
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
