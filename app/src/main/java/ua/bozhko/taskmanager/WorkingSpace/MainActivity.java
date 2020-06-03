@@ -3,13 +3,16 @@ package ua.bozhko.taskmanager.WorkingSpace;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageButton;
 
 import ua.bozhko.taskmanager.Constants;
+import ua.bozhko.taskmanager.DataBaseFirebase;
 import ua.bozhko.taskmanager.R;
 import ua.bozhko.taskmanager.WorkingSpace.Goals.MainGoals;
 import ua.bozhko.taskmanager.WorkingSpace.Habits.MainHabits;
@@ -46,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.relativeLayout, mainToDoList).commit();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        DataBaseFirebase dataBaseFirebase = DataBaseFirebase.createOrReturn();
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        dataBaseFirebase.setSharedPreferencesAndConMan(sharedPreferences, connectivityManager);
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();

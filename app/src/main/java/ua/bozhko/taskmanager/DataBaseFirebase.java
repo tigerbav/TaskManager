@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,12 +30,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,9 +48,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import ua.bozhko.taskmanager.WorkingSpace.MainActivity;
 import ua.bozhko.taskmanager.WorkingSpace.ToDoList.DialogSetDay;
@@ -64,8 +71,13 @@ public class DataBaseFirebase {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Map<String, Boolean> flag = new HashMap<>();
 
+    private  ConnectivityManager connectivityManager;
+    private NetworkInfo wifiInfo;
+
+
     private String currentData;
 
+    private SharedPreferences sharedPreferences;
 
     private static GoogleSignInOptions gso;
 
@@ -73,6 +85,7 @@ public class DataBaseFirebase {
         currentData = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
         //dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1 == 0) ? Calendar.DAY_OF_WEEK : Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
         flag.put(Constants.FLAG, true);
+
     }
 
     static public DataBaseFirebase createOrReturn(){
@@ -118,165 +131,220 @@ public class DataBaseFirebase {
     }
 
     public void writeToDBGeneralList(String generalList){
-        Map<String, String> generalTask = new HashMap<>();
-        generalTask.put(Constants.GENERAL_TASK, generalList);
-
-        if(mUser.getEmail() != null)
+        if(hasConnection())
         {
-            db.collection(mUser.getEmail())
-                    .document(Constants.GENERAL_TASK)
-                    .collection(Constants.GENERAL_TASK)
-                    .document(generalList)
-                    .set(generalTask);
+            Map<String, String> generalTask = new HashMap<>();
+            generalTask.put(Constants.GENERAL_TASK, generalList);
 
-            db.collection(mUser.getEmail())
-                    .document(currentData)
-                    .set(flag);
+            if(mUser.getEmail() != null)
+            {
+                db.collection(mUser.getEmail())
+                        .document(Constants.GENERAL_TASK)
+                        .collection(Constants.GENERAL_TASK)
+                        .document(generalList)
+                        .set(generalTask);
+
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .set(flag);
+            }
         }
-
     }
 
     public void takeFlag(final FragmentTransaction fTrans, NoTaskScreen noTaskScreen, GeneralList generalList, Context context){
-        db.collection(Objects.requireNonNull(mUser.getEmail()))
-                .document(currentData)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            if (task.getResult() != null) {
-                                if(task.getResult().getData() != null){
-                                    Map<String, Object> temp = task.getResult().getData();
-                                    if ((boolean) temp.get(Constants.FLAG))
-                                    {
-                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                                        if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
-                                            fTrans.add(R.id.frameLayout, new GeneralList()).commit();
+        if(hasConnection()){
+            if(mUser.getEmail() != null)
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if(task.isSuccessful()) {
+                                    if (task.getResult() != null) {
+                                        if(task.getResult().getData() != null){
+                                            Map<String, Object> temp = task.getResult().getData();
+                                            if ((boolean) temp.get(Constants.FLAG))
+                                            {
+                                                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                                                if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+                                                    fTrans.add(R.id.frameLayout, new GeneralList()).commit();
+                                                else
+                                                    fTrans.add(R.id.frameLayout, generalList).commit();
+                                            }
+
+                                            else
+                                                fTrans.add(R.id.frameLayout, noTaskScreen).commit();
+                                        }
                                         else
-                                            fTrans.add(R.id.frameLayout, generalList).commit();
+                                        {
+                                            fTrans.add(R.id.frameLayout, noTaskScreen);
+                                            fTrans.commit();
+                                        }
                                     }
+                                }
 
-                                    else
-                                        fTrans.add(R.id.frameLayout, noTaskScreen).commit();
-                                }
-                                else
-                                {
-                                    fTrans.add(R.id.frameLayout, noTaskScreen);
-                                    fTrans.commit();
-                                }
                             }
-                        }
+                        });
+        }
+        else {
 
-                    }
-                });
+            if(sharedPreferences.getStringSet(Constants.GENERAL_TASK_FOR_LOCAL, null) != null){
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
+                    fTrans.add(R.id.frameLayout, new GeneralList()).commit();
+                else
+                    fTrans.add(R.id.frameLayout, generalList).commit();
+            }
+
+            else
+                fTrans.add(R.id.frameLayout, noTaskScreen).commit();
+        }
     }
 
     public void readFromDBGeneralList(Context context, LinearLayout.LayoutParams layoutParams, LinearLayout linearLayout, ArrayList<Button> allButtons, GeneralList generalList){
-        db.collection(Objects.requireNonNull(mUser.getEmail()))
-                .document(Constants.GENERAL_TASK)
-                .collection(Constants.GENERAL_TASK)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                                Map<String, Object> temp = document.getData();
-                                String tempString = (String) temp.get(Constants.GENERAL_TASK);
+        if(hasConnection()){
+            if(mUser.getEmail() != null)
+                db.collection(mUser.getEmail())
+                        .document(Constants.GENERAL_TASK)
+                        .collection(Constants.GENERAL_TASK)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                        Map<String, Object> temp = document.getData();
+                                        String tempString = (String) temp.get(Constants.GENERAL_TASK);
 
-                                Button button = new Button(context, null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
-                                button.setText(tempString);
-                                button.setId(++GeneralList.ID);
-                                button.setLayoutParams(layoutParams);
-                                linearLayout.addView(button);
-                                allButtons.add(button);
-                                button.setOnClickListener(generalList);
+                                        Button button = new Button(context, null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
+                                        button.setText(tempString);
+                                        button.setId(++GeneralList.ID);
+                                        button.setLayoutParams(layoutParams);
+                                        linearLayout.addView(button);
+                                        allButtons.add(button);
+                                        button.setOnClickListener(generalList);
+                                    }
+                                } else {
+                                    Log.d("Error read", "Error getting documents: ", task.getException());
+                                }
                             }
-                        } else {
-                            Log.d("Error read", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+                        });
+        }
+        else {
+            Set<String> getTasks = sharedPreferences.getStringSet(Constants.GENERAL_TASK_FOR_LOCAL, null);
+            if(getTasks != null){
+                for (String getTask : getTasks) {
+                    Button button = new Button(context, null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
+                    button.setText(getTask);
+                    button.setId(++GeneralList.ID);
+                    button.setLayoutParams(layoutParams);
+                    linearLayout.addView(button);
+                    allButtons.add(button);
+                    button.setOnClickListener(generalList);
+                }
+            }
+        }
     }
 
     public void writeToDBMainList(String generalList, String mainList){
-        Map<String, Object> listData = new HashMap<>();
-        listData.put(Constants.MAIN_LIST, mainList);
+        if(hasConnection()){
+            Map<String, Object> listData = new HashMap<>();
+            listData.put(Constants.MAIN_LIST, mainList);
 
-        if(mUser.getEmail() != null)
-        {
-            db.collection(mUser.getEmail())
-                    .document(currentData)
-                    .collection(generalList)
-                    .document(mainList)
-                    .set(listData);
+            if(mUser.getEmail() != null)
+            {
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .collection(generalList)
+                        .document(mainList)
+                        .set(listData);
 
-            db.collection(mUser.getEmail())
-                    .document(currentData)
-                    .set(flag);
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .set(flag);
+            }
         }
+
 
     }
 
     public void writeToDBCheckList(String generalList, String mainList){
-        Map<String, Object> listData = new HashMap<>();
-        listData.put(Constants.CHECK_BOX_COMPLETE, true);
+        if(hasConnection()){
+            Map<String, Object> listData = new HashMap<>();
+            listData.put(Constants.CHECK_BOX_COMPLETE, true);
 
-        if(mUser.getEmail() != null)
-        {
-            db.collection(mUser.getEmail())
-                    .document(currentData)
-                    .collection(generalList)
-                    .document(mainList)
-                    .update(listData);
+            if(mUser.getEmail() != null)
+            {
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .collection(generalList)
+                        .document(mainList)
+                        .update(listData);
+            }
         }
+
 
     }
 
     public void readFromDBMainList(String generalTask, Context context, LinearLayout toDoList, DialogSetDay dialogSetDay, FragmentManager fragmentManager, ICallBack.IDay iDay){
-        db.collection(Objects.requireNonNull(mUser.getEmail()))
-                .document(currentData)
-                .collection(generalTask)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> temp = document.getData();
-                                String listMain = (String) temp.get(Constants.MAIN_LIST);
-                                String time = "";
-                                boolean checkBoxComplete = temp.get(Constants.CHECK_BOX_COMPLETE) == null ? false : (boolean) temp.get(Constants.CHECK_BOX_COMPLETE);
-                                try {
-                                    String tempHoursBefore = (long) temp.get(Constants.TIME_BEFORE_HOURS) > 9 ?
-                                            String.valueOf(temp.get(Constants.TIME_BEFORE_HOURS)) :
-                                            "0" + temp.get(Constants.TIME_BEFORE_HOURS);
-                                    String tempHoursAfter = (long) temp.get(Constants.TIME_AFTER_HOURS) > 9 ?
-                                            String.valueOf( temp.get(Constants.TIME_AFTER_HOURS)) :
-                                            "0" +  temp.get(Constants.TIME_AFTER_HOURS);
-                                    String tempMinutesBefore = (long) temp.get(Constants.TIME_BEFORE_MINUTES) > 9 ?
-                                            String.valueOf(temp.get(Constants.TIME_BEFORE_MINUTES)) :
-                                            "0" + temp.get(Constants.TIME_BEFORE_MINUTES);
-                                    String tempMinutesAfter = (long) temp.get(Constants.TIME_AFTER_MINUTES) > 9 ?
-                                            String.valueOf(temp.get(Constants.TIME_AFTER_MINUTES)) :
-                                            "0" + temp.get(Constants.TIME_AFTER_MINUTES);
+        if(hasConnection()){
+            if(mUser.getEmail() != null)
+                db.collection(mUser.getEmail())
+                        .document(currentData)
+                        .collection(generalTask)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Map<String, Object> temp = document.getData();
+                                        String listMain = (String) temp.get(Constants.MAIN_LIST);
+                                        String time = "";
+                                        boolean checkBoxComplete = temp.get(Constants.CHECK_BOX_COMPLETE) == null ? false : (boolean) temp.get(Constants.CHECK_BOX_COMPLETE);
+                                        try {
+                                            String tempHoursBefore = (long) temp.get(Constants.TIME_BEFORE_HOURS) > 9 ?
+                                                    String.valueOf(temp.get(Constants.TIME_BEFORE_HOURS)) :
+                                                    "0" + temp.get(Constants.TIME_BEFORE_HOURS);
+                                            String tempHoursAfter = (long) temp.get(Constants.TIME_AFTER_HOURS) > 9 ?
+                                                    String.valueOf( temp.get(Constants.TIME_AFTER_HOURS)) :
+                                                    "0" +  temp.get(Constants.TIME_AFTER_HOURS);
+                                            String tempMinutesBefore = (long) temp.get(Constants.TIME_BEFORE_MINUTES) > 9 ?
+                                                    String.valueOf(temp.get(Constants.TIME_BEFORE_MINUTES)) :
+                                                    "0" + temp.get(Constants.TIME_BEFORE_MINUTES);
+                                            String tempMinutesAfter = (long) temp.get(Constants.TIME_AFTER_MINUTES) > 9 ?
+                                                    String.valueOf(temp.get(Constants.TIME_AFTER_MINUTES)) :
+                                                    "0" + temp.get(Constants.TIME_AFTER_MINUTES);
 
-                                    time = tempHoursBefore + ":" +
-                                            tempMinutesBefore + "-" +
-                                            tempHoursAfter + ":" +
-                                            tempMinutesAfter;
-                                }
-                                catch (Exception e){
-                                    Log.w("Null TIME", e);
-                                }
+                                            time = tempHoursBefore + ":" +
+                                                    tempMinutesBefore + "-" +
+                                                    tempHoursAfter + ":" +
+                                                    tempMinutesAfter;
+                                        }
+                                        catch (Exception e){
+                                            Log.w("Null TIME", e);
+                                        }
 
-                                setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time, generalTask, iDay, checkBoxComplete);
+                                        setList(context, listMain, toDoList, dialogSetDay, fragmentManager, time, generalTask, iDay, checkBoxComplete);
+                                    }
+                                } else {
+                                    Log.d("Error read", "Error getting documents: ", task.getException());
+                                }
                             }
-                        } else {
-                            Log.d("Error read", "Error getting documents: ", task.getException());
-                        }
+                        });
+        }
+        else {
+            Set<String> getList = sharedPreferences.getStringSet(Constants.MAIN_TASKS_FOR_LOCAL, null);
+            if(getList != null) {
+                for (String getTask : getList) {
+                    if(getTask.contains(generalTask)){
+                        getTask = getTask.replace(generalTask, "");
+                        setList(context, getTask, toDoList, dialogSetDay, fragmentManager, "", generalTask, iDay, false);
                     }
-                });
+                }
+            }
+        }
     }
 
     private void setList(Context context, String listMain,
@@ -419,7 +487,7 @@ public class DataBaseFirebase {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            mUser = mAuth.getCurrentUser();
                             Intent intent = new Intent(activity, MainActivity.class);
 
                             //подготовка к удалению ЛОГО и созданию МэйнАктивити
@@ -432,4 +500,41 @@ public class DataBaseFirebase {
                     }
                 });
     }
+
+    public void signInTwitter(Activity activity){
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+        FirebaseAuth.getInstance()
+                .startActivityForSignInWithProvider(activity, provider.build())
+                .addOnSuccessListener(
+                        new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                mUser = authResult.getUser();
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle failure.
+                            }
+                        });
+    }
+
+    public void setSharedPreferencesAndConMan(SharedPreferences sharedPreferences, ConnectivityManager connectivityManager){
+        this.sharedPreferences = sharedPreferences;
+        this.connectivityManager = connectivityManager;
+    }
+
+    private  boolean hasConnection() {
+        wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected())
+            return true;
+        wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected())
+            return true;
+        wifiInfo = connectivityManager.getActiveNetworkInfo();
+        return wifiInfo != null && wifiInfo.isConnected();
+    }
+
 }

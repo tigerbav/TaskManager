@@ -31,8 +31,10 @@ import androidx.fragment.app.Fragment;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
@@ -49,6 +51,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
     private NotificationDialog notificationDialog;
     private DataBaseFirebase dataBaseFirebase;
     private String generalList;
+    private SharedPreferences sharedPreferences;
 
     public static List<CheckBox> listOfToDoList = new ArrayList<>();
 
@@ -67,7 +70,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
 
         dataBaseFirebase = DataBaseFirebase.createOrReturn();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
             NotificationDialog.setNotification(this, sharedPreferences.getString(Constants.MAIN_LIST, ""),
@@ -105,6 +108,8 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
                 TodayGeneralClass.fTrans.replace(R.id.frameLayout, new GeneralList()).commit();
             }
         });
+
+
         dataBaseFirebase.readFromDBMainList(generalList, getContext(), toDoList, dialogSetDay, getFragmentManager(), this);
         return view;
     }
@@ -125,6 +130,13 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
                 if(!value.equals("") && !repeatList(value))
                 {
                     createAList(value);
+                    Set<String> stringSet = sharedPreferences.getStringSet(Constants.MAIN_TASKS_FOR_LOCAL, null);
+                    if(stringSet == null){
+                        stringSet = new HashSet<>();
+                    }
+                    stringSet.add(generalList + value);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putStringSet(Constants.MAIN_TASKS_FOR_LOCAL, stringSet ).apply();
                 }
             }
         });

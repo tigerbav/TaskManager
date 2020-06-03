@@ -6,7 +6,9 @@ public class Constants {
             ERROR_PASSWORD_MAIL = "Password or mail error!",
             GENERAL_TASK = "General task",
             NOTIFICATION_MAIN_TEXT = "Notification main text",
-            GLOBAL_LIST ="Global list";
+            GLOBAL_LIST ="Global list",
+            GENERAL_TASK_FOR_LOCAL = "General tasks for local",
+            MAIN_TASKS_FOR_LOCAL = "Main tasks for local";
     public static final String MAIN_LIST = "Main list";
     public static final String FLAG = "Flag";
     public static final String DOWN = "Down";
