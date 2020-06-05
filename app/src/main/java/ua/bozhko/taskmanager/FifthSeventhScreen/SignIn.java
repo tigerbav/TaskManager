@@ -71,6 +71,12 @@ public class SignIn extends AppCompatActivity {
                 dataBaseFirebase.googleSignIn(SignIn.this);
             }
         });
+        twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataBaseFirebase.signInTwitter(SignIn.this);
+            }
+        });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -19,6 +19,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import ua.bozhko.taskmanager.Constants;
 import ua.bozhko.taskmanager.DataBaseFirebase;
@@ -32,6 +35,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
     private ArrayList<Button> allButtons = new ArrayList<>();
     public static int ID = 0;
     private DataBaseFirebase dataBaseFirebase;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -45,8 +49,9 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(15, 15, 15, 15);
 
-        //начало оработки нотификации
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
             ListOfWorking listOfWorking = new ListOfWorking();
@@ -60,15 +65,14 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         }
         //конец обработки нотификации))
         for (int value : buttonName) {
-            Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
-            button.setText(value);
-            button.setId(++ID);
-            button.setLayoutParams(layoutParams);
-            linearLayout.addView(button);
-            allButtons.add(button);
-            button.setOnClickListener(GeneralList.this);
+            createButton("", value, layoutParams);
         }
         dataBaseFirebase.readFromDBGeneralList(getContext(), layoutParams, linearLayout, allButtons, GeneralList.this);
+
+
+
+
+
 
         add_new_list.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,14 +98,16 @@ public class GeneralList extends Fragment implements View.OnClickListener {
                 String value = input.getText().toString();
                 if(!value.equals(""))
                 {
-                    Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
-                    button.setText(value);
-                    button.setId(++ID);
-                    button.setLayoutParams(layoutPar);
-                    linearLayout.addView(button);
-                    allButtons.add(button);
-                    button.setOnClickListener(GeneralList.this);
+                    createButton(value, 0, layoutPar);
                     dataBaseFirebase.writeToDBGeneralList(value);
+
+                    Set<String> stringSet = sharedPreferences.getStringSet(Constants.GENERAL_TASK_FOR_LOCAL, null);
+                    if(stringSet == null){
+                        stringSet = new HashSet<>();
+                    }
+                    stringSet.add(value);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putStringSet(Constants.GENERAL_TASK_FOR_LOCAL, stringSet).apply();
                 }
             }
         });
@@ -111,6 +117,19 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         });
 
         alert.show();
+    }
+
+    private void createButton(String text, int text2, ViewGroup.LayoutParams layoutParams){
+        Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
+        if(!text.equals(""))
+            button.setText(text);
+        else
+            button.setText(text2);
+        button.setId(++ID);
+        button.setLayoutParams(layoutParams);
+        linearLayout.addView(button);
+        allButtons.add(button);
+        button.setOnClickListener(GeneralList.this);
     }
 
     @Override
