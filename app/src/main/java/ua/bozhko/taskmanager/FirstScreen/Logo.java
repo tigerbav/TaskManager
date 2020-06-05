@@ -35,8 +35,7 @@ public class Logo extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(FirebaseAuth.getInstance().getCurrentUser() != null ||
-                    GoogleSignIn.getLastSignedInAccount(this) != null){
+            if(FirebaseAuth.getInstance().getCurrentUser() != null ){
                 Intent intent = new Intent(Logo.this, MainActivity.class);
                 //подготовка к удалению ЛОГО и созданию МэйнАктивити
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

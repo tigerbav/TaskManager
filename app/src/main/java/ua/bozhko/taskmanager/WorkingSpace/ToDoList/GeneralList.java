@@ -45,7 +45,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(15, 15, 15, 15);
 
-
+        //начало оработки нотификации
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
@@ -58,7 +58,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
             TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
             TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking).commit();
         }
-
+        //конец обработки нотификации))
         for (int value : buttonName) {
             Button button = new Button(getContext(), null, R.style.buttons_todolist_general_list, R.style.buttons_todolist_general_list);
             button.setText(value);
