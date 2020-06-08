@@ -269,10 +269,10 @@ public class DataBaseFirebase {
 
     }
 
-    public void writeToDBCheckList(String generalList, String mainList){
+    public void writeToDBCheckList(String generalList, String mainList, boolean check){
         if(hasConnection()){
             Map<String, Object> listData = new HashMap<>();
-            listData.put(Constants.CHECK_BOX_COMPLETE, true);
+            listData.put(Constants.CHECK_BOX_COMPLETE, check);
 
             if(mUser.getEmail() != null)
             {
@@ -372,7 +372,7 @@ public class DataBaseFirebase {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b)
-                    dataBaseFirebase.writeToDBCheckList(generalTask, listMain);
+                    dataBaseFirebase.writeToDBCheckList(generalTask, listMain, b);
             }
         });
         ListOfWorking.listOfToDoList.add(checkBox);

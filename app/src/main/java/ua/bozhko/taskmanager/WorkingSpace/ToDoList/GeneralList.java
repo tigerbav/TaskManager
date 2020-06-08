@@ -69,11 +69,6 @@ public class GeneralList extends Fragment implements View.OnClickListener {
         }
         dataBaseFirebase.readFromDBGeneralList(getContext(), layoutParams, linearLayout, allButtons, GeneralList.this);
 
-
-
-
-
-
         add_new_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
