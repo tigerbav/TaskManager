@@ -130,6 +130,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
                 if(!value.equals("") && !repeatList(value))
                 {
                     createAList(value);
+                    String currentDay = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
                     Set<String> stringSet = sharedPreferences.getStringSet(Constants.MAIN_TASKS_FOR_LOCAL, null);
                     if(stringSet == null){
                         stringSet = new HashSet<>();

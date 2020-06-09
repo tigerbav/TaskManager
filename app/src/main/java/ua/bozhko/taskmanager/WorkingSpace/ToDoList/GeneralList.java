@@ -70,9 +70,6 @@ public class GeneralList extends Fragment implements View.OnClickListener {
 
 
 
-
-
-
         add_new_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
