@@ -51,6 +51,7 @@ public class GeneralList extends Fragment implements View.OnClickListener {
 
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         if(!sharedPreferences.getString(Constants.NOTIFICATION_MAIN_TEXT, "").equals(""))
         {
             ListOfWorking listOfWorking = new ListOfWorking();
@@ -62,12 +63,11 @@ public class GeneralList extends Fragment implements View.OnClickListener {
             TodayGeneralClass.fTrans = getFragmentManager().beginTransaction();
             TodayGeneralClass.fTrans.replace(R.id.frameLayout, listOfWorking).commit();
         }
-
+        //конец обработки нотификации))
         for (int value : buttonName) {
             createButton("", value, layoutParams);
         }
         dataBaseFirebase.readFromDBGeneralList(getContext(), layoutParams, linearLayout, allButtons, GeneralList.this);
-
 
 
         add_new_list.setOnClickListener(new View.OnClickListener() {

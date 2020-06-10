@@ -135,7 +135,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
                     if(stringSet == null){
                         stringSet = new HashSet<>();
                     }
-                    stringSet.add(generalList + value);
+                    stringSet.add(generalList + value);// конкатенация(объеденение) строк
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(Constants.CURRENT_DAY_LOCATL_DB, currentDay);
                     editor.putStringSet(Constants.MAIN_TASKS_FOR_LOCAL, stringSet).apply();
@@ -168,8 +168,8 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                    dataBaseFirebase.writeToDBCheckList(generalList, value, b);
+
+                dataBaseFirebase.writeToDBCheckList(generalList, value, b);
             }
         });
         checkBox.setLayoutParams(forWeight);
