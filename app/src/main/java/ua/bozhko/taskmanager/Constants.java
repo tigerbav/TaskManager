@@ -25,7 +25,7 @@ public class Constants {
     public static final String HOLD_OVER = "Hold over";
     public static final String SOUND = "Sound";
     public static final Object NO_DATA = "No data";
-    public static final Object CURRENT_DAY_LOCATL_DB = "Current Day";
+    public static final String CURRENT_DAY_LOCATL_DB = "Current Day";
 
     public static final String TIME_BEFORE_HOURS = "Time before HOURS";
     public static final String TIME_BEFORE_MINUTES = "Time before MINUTES";

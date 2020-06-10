@@ -269,10 +269,10 @@ public class DataBaseFirebase {
 
     }
 
-    public void writeToDBCheckList(String generalList, String mainList){
+    public void writeToDBCheckList(String generalList, String mainList, boolean check){
         if(hasConnection()){
             Map<String, Object> listData = new HashMap<>();
-            listData.put(Constants.CHECK_BOX_COMPLETE, true);
+            listData.put(Constants.CHECK_BOX_COMPLETE, check);
 
             if(mUser.getEmail() != null)
             {
@@ -336,6 +336,13 @@ public class DataBaseFirebase {
         }
         else {
             Set<String> getList = sharedPreferences.getStringSet(Constants.MAIN_TASKS_FOR_LOCAL, null);
+            if(!sharedPreferences.getString(Constants.CURRENT_DAY_LOCATL_DB, "").equals(
+                    new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()))){
+                if(getList != null)
+                    getList.clear();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet(Constants.MAIN_TASKS_FOR_LOCAL, getList ).apply();
+            }
             if(getList != null) {
                 for (String getTask : getList) {
                     if(getTask.contains(generalTask)){
@@ -372,7 +379,7 @@ public class DataBaseFirebase {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b)
-                    dataBaseFirebase.writeToDBCheckList(generalTask, listMain);
+                    dataBaseFirebase.writeToDBCheckList(generalTask, listMain, b);
             }
         });
         ListOfWorking.listOfToDoList.add(checkBox);

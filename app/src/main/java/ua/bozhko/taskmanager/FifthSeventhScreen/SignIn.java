@@ -47,7 +47,7 @@ public class SignIn extends AppCompatActivity {
         email = findViewById(R.id.loginString);
         password = findViewById(R.id.passwordString);
 
-        mAwesomeValidationNameEmailPassword.addValidation(SignIn.this, R.id.loginString, RegexTemplate.TELEPHONE + android.util.Patterns.EMAIL_ADDRESS, R.string.error_gmail_phone);
+        mAwesomeValidationNameEmailPassword.addValidation(SignIn.this, R.id.loginString, android.util.Patterns.EMAIL_ADDRESS, R.string.error_gmail_phone);
         mAwesomeValidationNameEmailPassword.addValidation(SignIn.this, R.id.passwordString, ".{6,}", R.string.password_error);
 
         loginBtn = findViewById(R.id.loginBtn);
@@ -56,12 +56,9 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(mAwesomeValidationNameEmailPassword.validate())
-                    if(email.getEditText() != null &&
-                            password.getEditText() != null)
-                        {
-                            dataBaseFirebase.signIn(email.getEditText().getText().toString(),
-                                    password.getEditText().getText().toString(), SignIn.this);
-                        }
+                    dataBaseFirebase.signIn(email.getEditText().getText().toString(),
+                            password.getEditText().getText().toString(), SignIn.this);
+
             }
         });
 

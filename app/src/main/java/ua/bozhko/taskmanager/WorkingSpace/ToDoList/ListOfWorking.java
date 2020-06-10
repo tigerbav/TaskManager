@@ -137,7 +137,8 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
                     }
                     stringSet.add(generalList + value);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putStringSet(Constants.MAIN_TASKS_FOR_LOCAL, stringSet ).apply();
+                    editor.putString(Constants.CURRENT_DAY_LOCATL_DB, currentDay);
+                    editor.putStringSet(Constants.MAIN_TASKS_FOR_LOCAL, stringSet).apply();
                 }
             }
         });
@@ -168,7 +169,7 @@ public class ListOfWorking extends Fragment implements ICallBack.IDay, ICallBack
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b)
-                    dataBaseFirebase.writeToDBCheckList(generalList, value);
+                    dataBaseFirebase.writeToDBCheckList(generalList, value, b);
             }
         });
         checkBox.setLayoutParams(forWeight);

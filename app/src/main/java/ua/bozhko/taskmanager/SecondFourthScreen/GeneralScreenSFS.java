@@ -48,7 +48,6 @@ public class GeneralScreenSFS extends AppCompatActivity {
         });
         //опеределение вьюПейджера, который содержит в себе 3 фрагмента
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorWhite));
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < 3; i++) {

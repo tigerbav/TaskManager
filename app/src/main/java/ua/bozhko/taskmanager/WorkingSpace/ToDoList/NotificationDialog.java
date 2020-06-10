@@ -61,7 +61,7 @@ public class NotificationDialog extends DialogFragment {
                 if(iNotification != null){
                     iNotification.setCheckBox(task);
                     dismiss();
-                    dataBaseFirebase.writeToDBCheckList(general, task);
+                    dataBaseFirebase.writeToDBCheckList(general, task, true);
                 }
             }
         });
